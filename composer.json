@@ -1,0 +1,33 @@
+{
+	"name": "leuchtdiode/mezzio-async-queue",
+	"description": "Mezzio module for an async queue",
+	"type": "library",
+	"license": "MIT",
+	"homepage": "https://try2catch.com",
+	"authors": [
+		{
+			"name": "Alex Schloegl",
+			"email": "alex@try2catch.com",
+			"homepage": "https://try2catch.com",
+			"role": "Developer"
+		}
+	],
+	"keywords": [
+		"Mezzio",
+		"Module",
+		"Queue",
+		"Asynchron",
+		"Worker"
+	],
+	"require": {
+		"php": "~8.3.0 || ~8.4.0",
+		"leuchtdiode/mezzio-common": "^1.0.0",
+		"ramsey/uuid-doctrine": "^2.1.0",
+		"leuchtdiode/mezzio-console": "^0.0.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"AsyncQueue\\": "src/"
+		}
+	}
+}
