@@ -94,9 +94,8 @@ class Processor
 					$processAfter = new DateTime();
 					$processAfter->modify('+ ' . $retryInSeconds . ' seconds');
 
-					$entity->setProcessAfter(
-						$processAfter
-					);
+					$entity->setProcessAfter($processAfter);
+					$entity->setStatus(Status::PENDING);
 				}
 			}
 
