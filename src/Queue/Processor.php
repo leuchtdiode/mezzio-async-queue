@@ -56,7 +56,8 @@ class Processor
 		$items = $this->itemProvider->filter(
 			$filterChain,
 			OrderChain::create()
-				->addOrder(ProcessAfterOrder::asc())
+				->addOrder(ProcessAfterOrder::asc()),
+			$params->getLimit()
 		);
 
 		foreach ($items as $item)

@@ -13,6 +13,7 @@ class Process extends Command
 {
 	private const string TYPE         = 'type';
 	private const string EXCLUDE_TYPE = 'exclude-type';
+	private const string LIMIT        = 'limit';
 
 	public function __construct(
 		private readonly Processor $processor
@@ -37,6 +38,12 @@ class Process extends Command
 				null,
 				InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
 				'Exclude given types'
+			)
+			->addOption(
+				self::LIMIT,
+				null,
+				InputOption::VALUE_REQUIRED,
+				'Limit items per run'
 			);
 	}
 
@@ -45,10 +52,18 @@ class Process extends Command
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
+		$limit = ($input->getOption(self::LIMIT) ?? null);
+
+		if ($limit)
+		{
+			$limit = (int)$limit;
+		}
+
 		$this->processor->process(
 			ProcessParams::create()
 				->setTypes($input->getOption(self::TYPE) ?? [])
 				->setExcludeTypes($input->getOption(self::EXCLUDE_TYPE) ?? [])
+				->setLimit($limit)
 		);
 
 		return self::SUCCESS;

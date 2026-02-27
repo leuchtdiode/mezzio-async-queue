@@ -15,6 +15,8 @@ class ProcessParams
 	 */
 	private array $excludeTypes;
 
+	private ?int $limit = null;
+
 	public static function create(): static
 	{
 	    return new static();
@@ -51,6 +53,17 @@ class ProcessParams
 	public function setExcludeTypes(array $excludeTypes): ProcessParams
 	{
 		$this->excludeTypes = $excludeTypes;
+		return $this;
+	}
+
+	public function getLimit(): ?int
+	{
+		return $this->limit;
+	}
+
+	public function setLimit(?int $limit): ProcessParams
+	{
+		$this->limit = $limit;
 		return $this;
 	}
 }

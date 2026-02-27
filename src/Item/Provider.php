@@ -24,10 +24,14 @@ class Provider
 	/**
 	 * @return Item[]
 	 */
-	public function filter(FilterChain $filterChain, ?OrderChain $orderChain = null): array
+	public function filter(FilterChain $filterChain, ?OrderChain $orderChain = null, ?int $limit = null): array
 	{
 		return $this->createDtos(
-			$this->repository->filter($filterChain, $orderChain)
+			$this->repository->filter(
+				filterChain: $filterChain,
+				orderChain: $orderChain,
+				limit: $limit ?? Repository::DEFAULT_LIMIT
+			)
 		);
 	}
 
