@@ -4,6 +4,7 @@ namespace AsyncQueue\Queue;
 use AsyncQueue\Item\EntitySaver;
 use AsyncQueue\Item\Filter\ProcessAfter as ProcessAfterFilter;
 use AsyncQueue\Item\Filter\Status as StatusFilter;
+use AsyncQueue\Item\Filter\Type as TypeFilter;
 use AsyncQueue\Item\Order\ProcessAfter as ProcessAfterOrder;
 use AsyncQueue\Item\ProcessData;
 use AsyncQueue\Item\Processor as ItemProcessor;
@@ -30,14 +31,30 @@ class Processor
 	/**
 	 * @throws Throwable
 	 */
-	public function process(): void
+	public function process(ProcessParams $params): void
 	{
 		$now = new DateTime();
 
+		$filterChain = FilterChain::create()
+			->addFilter(StatusFilter::is(Status::PENDING))
+			->addFilter(ProcessAfterFilter::before($now));
+
+		if (($types = $params->getTypes()))
+		{
+			$filterChain->addFilter(
+				TypeFilter::in($types)
+			);
+		}
+
+		if (($excludeTypes = $params->getExcludeTypes()))
+		{
+			$filterChain->addFilter(
+				TypeFilter::notIn($excludeTypes)
+			);
+		}
+
 		$items = $this->itemProvider->filter(
-			FilterChain::create()
-				->addFilter(StatusFilter::is(Status::PENDING))
-				->addFilter(ProcessAfterFilter::before($now)),
+			$filterChain,
 			OrderChain::create()
 				->addOrder(ProcessAfterOrder::asc())
 		);
