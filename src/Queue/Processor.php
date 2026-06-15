@@ -97,6 +97,11 @@ class Processor
 				->byId($entity->getId())
 				->getEntity();
 
+			if ($processResult->isChangePayload())
+			{
+				$entity->setPayLoad($processResult->getNewPayLoad());
+			}
+
 			if (($success = $processResult->isSuccess()) !== null)
 			{
 				$entity->setStatus(
