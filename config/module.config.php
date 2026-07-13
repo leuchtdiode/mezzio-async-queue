@@ -12,20 +12,17 @@ return [
 	],
 
 	'doctrine' => [
-		'configuration' => [
-			'orm_default' => [
-				'types' => [
-					UuidType::NAME => UuidType::class,
-				],
-			],
+		'types'  => [
+			UuidType::NAME => UuidType::class,
 		],
-		'driver'        => [
+		'driver' => [
 			'async_queue_entities' => [
 				'class' => AttributeDriver::class,
 				'cache' => 'array',
 				'paths' => [ __DIR__ . '/../src' ],
 			],
 			'orm_default'          => [
+				'class'   => AttributeDriver::class,
 				'drivers' => [
 					'AsyncQueue' => 'async_queue_entities',
 				],
