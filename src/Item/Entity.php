@@ -3,6 +3,7 @@ namespace AsyncQueue\Item;
 
 use Common\Db\Entity as DbEntity;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Ramsey\Uuid\Uuid;
@@ -26,10 +27,10 @@ class Entity implements DbEntity
 	private ?array $payLoad = null;
 
 	#[ORM\Column(type: 'datetime')]
-	private DateTime $createdDate;
+	private DateTimeInterface $createdDate;
 
 	#[ORM\Column(type: 'datetime')]
-	private DateTime $processAfter;
+	private DateTimeInterface $processAfter;
 
 	/**
 	 * @throws Exception
@@ -81,22 +82,22 @@ class Entity implements DbEntity
 		$this->payLoad = $payLoad;
 	}
 
-	public function getCreatedDate(): DateTime
+	public function getCreatedDate(): DateTimeInterface
 	{
 		return $this->createdDate;
 	}
 
-	public function setCreatedDate(DateTime $createdDate): void
+	public function setCreatedDate(DateTimeInterface $createdDate): void
 	{
 		$this->createdDate = $createdDate;
 	}
 
-	public function getProcessAfter(): DateTime
+	public function getProcessAfter(): DateTimeInterface
 	{
 		return $this->processAfter;
 	}
 
-	public function setProcessAfter(DateTime $processAfter): void
+	public function setProcessAfter(DateTimeInterface $processAfter): void
 	{
 		$this->processAfter = $processAfter;
 	}
