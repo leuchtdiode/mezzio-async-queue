@@ -16,16 +16,9 @@ return [
 			UuidType::NAME => UuidType::class,
 		],
 		'driver' => [
-			'async_queue_entities' => [
+			'orm_default' => [
 				'class' => AttributeDriver::class,
-				'cache' => 'array',
 				'paths' => [ __DIR__ . '/../src' ],
-			],
-			'orm_default'          => [
-				'class'   => AttributeDriver::class,
-				'drivers' => [
-					'AsyncQueue' => 'async_queue_entities',
-				],
 			],
 		],
 	],
