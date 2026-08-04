@@ -12,6 +12,7 @@ use AsyncQueue\Item\Provider;
 use AsyncQueue\Item\Status;
 use Common\Db\FilterChain;
 use Common\Db\OrderChain;
+use Common\Shutdown\State as ShutdownState;
 use DateTime;
 use Exception;
 use Psr\Container\ContainerInterface;
@@ -23,7 +24,8 @@ class Processor
 		private readonly array $config,
 		private readonly ContainerInterface $container,
 		private readonly Provider $itemProvider,
-		private readonly EntitySaver $entitySaver
+		private readonly EntitySaver $entitySaver,
+		private readonly ShutdownState $shutdownState
 	)
 	{
 	}
@@ -33,6 +35,11 @@ class Processor
 	 */
 	public function process(ProcessParams $params): void
 	{
+		if ($this->shutdownState->isShuttingDown())
+		{
+			return;
+		}
+
 		$now = new DateTime();
 
 		$filterChain = FilterChain::create()
