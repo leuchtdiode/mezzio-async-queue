@@ -2,6 +2,7 @@
 namespace AsyncQueue;
 
 use AsyncQueue\Command\Process as Process;
+use AsyncQueue\Shutdownable\NoProcessingItem;
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use Ramsey\Uuid\Doctrine\UuidType;
 
@@ -32,6 +33,14 @@ return [
 	'dependencies' => [
 		'abstract_factories' => [
 			DefaultFactory::class,
+		],
+	],
+
+	'common' => [
+		'shutdownable' => [
+			'checkers' => [
+				NoProcessingItem::class,
+			],
 		],
 	],
 ];
