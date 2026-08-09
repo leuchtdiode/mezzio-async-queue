@@ -22,6 +22,25 @@ class Provider
 	}
 
 	/**
+	 * Atomically claims the item for the current worker by moving it to processing.
+	 * Returns false if another worker claimed it first.
+	 */
+	public function claim(Item $item): bool
+	{
+		$entity = $item->getEntity();
+
+		if (!$this->repository->claim($entity->getId()))
+		{
+			return false;
+		}
+
+		// the update bypasses the entity manager, so keep the loaded entity in sync
+		$entity->setStatus(Status::PROCESSING);
+
+		return true;
+	}
+
+	/**
 	 * @return Item[]
 	 */
 	public function filter(FilterChain $filterChain, ?OrderChain $orderChain = null, ?int $limit = null): array
