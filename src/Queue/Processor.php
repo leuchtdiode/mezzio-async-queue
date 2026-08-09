@@ -32,13 +32,15 @@ class Processor
 	}
 
 	/**
+	 * Returns the number of items that have been claimed and processed by this run.
+	 *
 	 * @throws Throwable
 	 */
-	public function process(ProcessParams $params): void
+	public function process(ProcessParams $params): int
 	{
 		if ($this->shutdownState->isShuttingDown())
 		{
-			return;
+			return 0;
 		}
 
 		$now = new DateTime();
@@ -68,6 +70,8 @@ class Processor
 			$params->getLimit()
 		);
 
+		$processedCount = 0;
+
 		foreach ($items as $item)
 		{
 			// check before every single item, so a shutdown request only has to wait for the running one
@@ -76,23 +80,32 @@ class Processor
 				break;
 			}
 
-			$this->processItem(
-				$item
-					->getEntity()
-					->getId()
-			);
+			if (
+				$this->processItem(
+					$item
+						->getEntity()
+						->getId()
+				)
+			)
+			{
+				$processedCount++;
+			}
 		}
+
+		return $processedCount;
 	}
 
 	/**
+	 * Returns false if the item has not been processed, e.g. because another worker claimed it first.
+	 *
 	 * @throws Throwable
 	 */
-	private function processItem(UuidInterface $id): void
+	private function processItem(UuidInterface $id): bool
 	{
 		// reload, a previously processed item may have cleared the entity manager
 		if (!($item = $this->itemProvider->byId($id->toString())))
 		{
-			return;
+			return false;
 		}
 
 		$type = $item->getType();
@@ -103,7 +116,7 @@ class Processor
 		// claim atomically, so only one worker picks up the item and only this one is in processing state
 		if (!$this->itemProvider->claim($item))
 		{
-			return;
+			return false;
 		}
 
 		try
@@ -126,13 +139,13 @@ class Processor
 			// do not leave the item in processing state, it would block the shutdown checker forever
 			$this->markAsFailed($id);
 
-			return;
+			return true;
 		}
 
 		// reload, maybe the source system cleared the entity manager during processing
 		if (!($item = $this->itemProvider->byId($id->toString())))
 		{
-			return;
+			return true;
 		}
 
 		$entity = $item->getEntity();
@@ -163,6 +176,8 @@ class Processor
 		}
 
 		$this->entitySaver->save($entity);
+
+		return true;
 	}
 
 	/**
