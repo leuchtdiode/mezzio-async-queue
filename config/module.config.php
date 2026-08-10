@@ -37,7 +37,7 @@ return [
 	],
 
 	'common' => [
-		'shutdownable' => [
+		'shutdown' => [
 			'checkers' => [
 				NoProcessingItem::class,
 			],
