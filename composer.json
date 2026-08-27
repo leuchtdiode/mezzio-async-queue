@@ -25,6 +25,9 @@
 		"leuchtdiode/mezzio-console": "^0.1.0",
 		"ramsey/uuid-doctrine": "^2.1.0"
 	},
+	"suggest": {
+		"leuchtdiode/mezzio-monitoring": "Mandatory for health checks (^1.0.0)"
+	},
 	"autoload": {
 		"psr-4": {
 			"AsyncQueue\\": "src/"
