@@ -27,17 +27,8 @@ class Provider
 	 */
 	public function claim(Item $item): bool
 	{
-		$entity = $item->getEntity();
-
-		if (!$this->repository->claim($entity->getId()))
-		{
-			return false;
-		}
-
-		// the update bypasses the entity manager, so keep the loaded entity in sync
-		$entity->setStatus(Status::PROCESSING);
-
-		return true;
+		// the repository refreshes the entity after the update, see there
+		return $this->repository->claim($item->getEntity());
 	}
 
 	/**
